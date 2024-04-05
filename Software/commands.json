@@ -1,0 +1,32 @@
+{"rovers" : 
+    [
+        {
+            "commands":[
+                {
+                    "command": "left",
+                    "value": 10
+                },
+                {
+                    "command": "forward",
+                    "value": 20
+                },
+                {
+                    "command": "right",
+                    "value": 30
+                },
+                {
+                    "command": "forward",
+                    "value": 40
+                },
+                {
+                    "command": "right",
+                    "value": 20
+                },
+                {
+                    "command": "forward",
+                    "value": 30
+                }
+            ]
+        }
+    ]
+}
