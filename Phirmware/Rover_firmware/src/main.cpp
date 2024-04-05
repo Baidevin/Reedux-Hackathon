@@ -18,8 +18,13 @@ void roverTask(void *pvParameters)
 
 void setup() 
 {
+    Serial.begin(9600);
     rover = Rover();
-    xTaskCreate(roverTask, "RoverTask", 1000, NULL, 1, &RoverTask);
+    xTaskCreate(roverTask, "RoverTask", 10000, NULL, 1, &RoverTask);
+    rover.queueCommand(FORWARD, 3000);
+    rover.queueCommand(BACKWARD, 3000);
+    rover.queueCommand(FORWARD, 3000);
+    rover.queueCommand(BACKWARD, 2000);
 }
 
 void loop() 

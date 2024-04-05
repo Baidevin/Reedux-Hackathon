@@ -32,7 +32,9 @@ void Rover::executeCommand()
         return;
     }
 
+
     Command currentCommand = commandQueue[0];
+    Serial.printf("Executing command %d with value %d\n", currentCommand.command, currentCommand.value);
     switch (currentCommand.command)
     {
     case FORWARD:
