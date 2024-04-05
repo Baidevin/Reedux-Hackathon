@@ -1,19 +1,28 @@
 #include <Arduino.h>
-// #include<pins_arduino.h>
+#include <rover.hpp>
+#include <pins_arduino.h>
 
-void setup() {}
-void loop() {}
+Rover rover;
 
+TaskHandle_t RoverTask;
+TaskHandle_t SerialTask;
 
-int main()
+void roverTask(void *pvParameters)
 {
-  pinMode(2, OUTPUT);
-  digitalWrite(2, HIGH);
-  while (1)
-  {
-    digitalWrite(2, LOW);
-    sleep(1000);
-    digitalWrite(2, HIGH);
-    sleep(1000);
-  }
+    for (;;)
+    {
+        rover.controlLoop();
+        vTaskDelay(10);
+    }
+}
+
+void setup() 
+{
+    rover = Rover();
+    xTaskCreate(roverTask, "RoverTask", 1000, NULL, 1, &RoverTask);
+}
+
+void loop() 
+{
+    
 }
