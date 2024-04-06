@@ -16,7 +16,7 @@ if __name__ == '__main__':
     rover = turtle.Turtle()
     rover.speed(1)
     
-    with open('commands.json', 'r') as commands:
+    with open(os.path.dirname(__file__) + '/commands.json', 'r') as commands:
         data = json.load(commands)
     
     for command in data['rovers'][0]['commands']:

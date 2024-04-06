@@ -25,15 +25,46 @@ void roverTask(void *pvParameters)
 void socketTask(void *pvParameters)
 {
     WiFiClient client;
+    bool connected = false;
 
     for (;;)
     {
-        if (!client.connect(IPAddress('ros2-red.local'), 6996))
+        if (!client.connected())
         {
-            Serial.println("Failed to connect to server");
-            delay(1000);
-            continue;
+            if (!client.connect(IPAddress(192,168,247,137), 6996))
+            {
+                Serial.println("Failed to connect to server");
+                delay(1000);
+                continue;
+            }
         }
+
+        if (!connected)
+        {
+            Serial.println("Connected to server");
+            connected = true;
+
+            // Send rover id in format %id,<idnumber>
+            client.printf("&id,%d\n", ROVERID);
+        }
+
+        if (client.available())
+        {
+            Command command;
+            String input = client.readStringUntil('\n');
+            Serial.println(input);
+            if (input[0] == '$')
+            {
+                command.command = input.substring(1, input.indexOf(',')).toInt();
+                command.value = input.substring(input.indexOf(',') + 1).toInt();
+            }
+            else
+            {
+                Serial.println("Invalid command");
+            }
+            rover.queueCommand(command.command, command.value);
+        }
+        
 
         vTaskDelay(10);
     }
@@ -56,11 +87,14 @@ void setup()
 
     rover = Rover();
     
-    xTaskCreate(roverTask, "RoverTask", 10000, NULL, 1, &RoverTask);
-    rover.queueCommand(FORWARD, 3000);
-    rover.queueCommand(BACKWARD, 3000);
-    rover.queueCommand(FORWARD, 3000);
-    rover.queueCommand(BACKWARD, 2000);
+    // xTaskCreate(roverTask, "RoverTask", 10000, NULL, 1, &RoverTask);
+    // xTaskCreate(socketTask, "SocketTask", 10000, NULL, 1, &SocketTask);
+    xTaskCreatePinnedToCore(roverTask, "RoverTask", 10000, NULL, 1, &RoverTask, 0);
+    xTaskCreatePinnedToCore(socketTask, "SocketTask", 10000, NULL, 1, &SocketTask, 1);
+    // rover.queueCommand(FORWARD, 3000);
+    // rover.queueCommand(BACKWARD, 3000);
+    // rover.queueCommand(FORWARD, 3000);
+    // rover.queueCommand(BACKWARD, 2000);
 }
 
 void loop() 

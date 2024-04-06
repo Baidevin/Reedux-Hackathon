@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <motor.hpp>
 
-#define FORWARDSPEED 128
-#define TURNSPEED 128
+#define FORWARDSPEED 50
+#define TURNSPEED 75
 
 enum CommandEnum
 {
@@ -29,7 +29,7 @@ public:
 
     Command commandQueue[10];
 private:
-    Motor leftMotor = Motor(3, 5);
-    Motor rightMotor = Motor(6, 9);
+    Motor leftMotor = Motor(18, 17);
+    Motor rightMotor = Motor(16, 15);
     int queueIndex = 0;
 };

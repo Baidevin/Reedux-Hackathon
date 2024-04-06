@@ -5,6 +5,7 @@ from rover import Rover
 class RoverServer:
     def __init__(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind(('0.0.0.0', 6996))
         self.server.listen(0)
         
@@ -12,8 +13,12 @@ class RoverServer:
         
         self.accept_thread = threading.Thread(target=self.accept)
         self.accept_thread.start()
+        # self.accept_thread.join()
+        # self.server.shutdown(2)
+        # self.server.close()
         
     def accept(self):
+        print("Accepting connections...")
         while True:
             client, addr = self.server.accept()
             print('Connection from', addr)
@@ -27,4 +32,22 @@ class RoverServer:
         print('Rover ID not valid')
 
 if __name__ == '__main__':
-    rover = RoverServer()
+    roverServer = RoverServer()
+    waiting = True
+    while waiting:
+        for rover in roverServer.rovers:
+            # print(rover.id)
+            if rover.id == 1:
+                roverServer.sendCommand(1, 1, 1000)
+                roverServer.sendCommand(1, 2, 1000)
+                roverServer.sendCommand(1, 3, 1000)
+                roverServer.sendCommand(1, 4, 1000)
+                roverServer.sendCommand(1, 1, 1000)
+                roverServer.sendCommand(1, 2, 1000)
+                roverServer.sendCommand(1, 5, 1000)
+                roverServer.sendCommand(1, 1, 1000)
+                print("Commands sent")
+                waiting = False
+                break
+
+
