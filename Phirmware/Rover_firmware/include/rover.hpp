@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include <motor.hpp>
 
-#define FORWARDSPEED 50
-#define TURNSPEED 75
+#define FORWARDSPEED 25
+#define TURNSPEED 50
 
 enum CommandEnum
 {

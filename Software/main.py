@@ -1,34 +1,22 @@
-import roverServer
-import json
-import os
-import turtle
-from time import sleep
+from roverServer import RoverServer
+from roverUI import RoverUI
+
+cmdEnum = {
+    "forward": 2,
+    "backward": 1,
+    "left": 4,
+    "right": 3
+}
 
 if __name__ == '__main__':
+    roverServer = RoverServer()
+    roverUI = RoverUI()
     
-    data = {}
-    
-    window = turtle.Screen()
-    window.setup(800, 800)
-    window.title('Rover Control')
-    window.bgcolor('blue')
-    
-    rover = turtle.Turtle()
-    rover.speed(1)
-    
-    with open(os.path.dirname(__file__) + '/commands.json', 'r') as commands:
-        data = json.load(commands)
-    
-    for command in data['rovers'][0]['commands']:
-        if command['command'] == 'forward':
-            rover.forward(command['value'])
-        elif command['command'] == 'backward':
-            rover.backward(command['value'])
-        elif command['command'] == 'left':
-            rover.left(command['value'])
-        elif command['command'] == 'right':
-            rover.right(command['value'])
-        sleep(1)
-        
-    window.mainloop()
-    
+    while True:
+        roverUI.enter_cmd()
+        roverUI.run_cmd()
+        # Emulate a cmd clear
+        # for rover in roverServer.rovers:
+        for cmd in roverUI.cmds:
+            roverServer.sendCommand(1, cmdEnum[cmd['command']], cmd["value"] * (200 if cmd["command"] in ["forward", "backward"] else 40))
+        roverUI.cmds = []

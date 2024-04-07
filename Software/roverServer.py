@@ -13,9 +13,6 @@ class RoverServer:
         
         self.accept_thread = threading.Thread(target=self.accept)
         self.accept_thread.start()
-        # self.accept_thread.join()
-        # self.server.shutdown(2)
-        # self.server.close()
         
     def accept(self):
         print("Accepting connections...")
@@ -49,5 +46,3 @@ if __name__ == '__main__':
                 print("Commands sent")
                 waiting = False
                 break
-
-

@@ -1,7 +1,6 @@
 import socket
 import threading
 
-
 class Rover:
     def __init__(self, client:socket, addr):
         self.client = client
